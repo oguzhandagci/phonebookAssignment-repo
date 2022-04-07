@@ -1,9 +1,11 @@
 const { response } = require("express");
 const express = require("express");
 const moment = require("moment");
+const morgan = require('morgan');
 const app = express();
 
 app.use(express.json());
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :json"));
 
 let myData = [
   {
@@ -47,7 +49,7 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.listen(3001, () => {
-  console.log(3001);
+  console.log("Server running on port 3001");
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -79,4 +81,10 @@ app.post("/api/persons", (req, res) => {
   myData = myData.concat(newPerson);
   res.json(newPerson);
 
+});
+
+morgan.token("json", function(req, res) {
+  return JSON.stringify(
+    req.body
+  )
 });
